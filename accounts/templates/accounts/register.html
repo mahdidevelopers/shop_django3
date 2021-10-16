@@ -1,0 +1,16 @@
+{% extends 'store/main.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<h1 class="display-5">حساب خود را ایجاد کنید</h1>
+<br>
+<form method="POST">
+	{% csrf_token %}
+	{{ form|crispy }}
+	<br>
+	<input type="submit" name="submit" class="btn btn-primary mb-2" value="Register">
+	<input type="reset" name="reset" class="btn btn-secondary mb-2" value="Reset">
+	<br>
+	<a href="{% url 'login' %}">قبلا حساب دارید اینجا کلیک کنید</a>
+</form>
+
+{% endblock %}

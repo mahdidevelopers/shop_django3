@@ -1,0 +1,76 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+	<h2>صفحه پرداخت</h2>
+     <div class="row">
+		<div class="col-lg-6">
+			<div class="box-element" id="form-wrapper">
+				<form method="POST" action="{% url 'checkout'%}">
+					{% csrf_token %}
+					{{ form|crispy }}
+					<br>
+					<input type="submit" class="btn btn-primary mb-2" name="submit" , value='Add Address'>	
+				</form>
+			</div>
+		</div>
+
+		<div class="col-lg-6">
+			<div class="box-element">
+				<a  class="btn btn-outline-dark" href="{% url 'cart' %}">&#x2190; مشاهده سبد خرید</a>
+				<hr>
+				<h3>فاکتور من</h3>
+				<hr>
+				{% for item in items %}
+					<div class="cart-row" style="background-color: lightyellow;height: 80px">
+						<div style="flex:2"><a href="{% url 'item_detail' item.product.id %}"><img class="row-image" src="{{ item.product.get_imageURL }}" style="width: 80px; height: 80px;margin-left: 20px"></a></div>
+						<div style="flex:2"><p>{{item.product.name}}</p></div>
+						<div style="flex:1"><p> تومان {{item.product.price|floatformat:2}}</p></div>
+						<div style="flex:1"><p>x{{item.quantity}}</p></div>
+					</div>
+				{% endfor %}
+				<h5>محصول:   {{total_item_cart}}</h5>
+				<h5>Total:  تومان;{{total_cost_cart}}</h5>
+			</div>
+		</div>
+	</div>
+
+	<br>
+	<br>
+	{% if request.user.is_authenticated %}
+				<h6>از آدرس های زیر استفاده کنید</h6>
+				<div class="box-element">
+					{% for adr in addresses %}
+						<div class="cart-row">
+							<div>
+								<h4><strong><p>{{adr.recepient_fullname}}</p></strong></h4>
+								<div>  Phone Number :-> {{adr.phone_no}}</div>
+								<pre class="quantity"> {{adr.address_line1}},</pre>
+								<pre class="quantity">{{adr.address_line2}},</pre>
+								<pre class="quantity">{{adr.city}},</pre>
+								<pre class="quantity">{{adr.state}},</pre>
+								<pre class="quantity">{{adr.country}},</pre>
+								<pre class="quantity">{{adr.zipcode}}</pre>
+								<br>
+								<div class="quantity">
+									<pre><a href="{% url 'make_payment' adr.id %}">ایجاد و پرداخت</a></pre>
+								</div>
+								<div class="quantity">
+									<pre><a href="{% url 'update_address' adr.id %}">تغییر</a></pre>
+								</div>
+								<div class="quantity">
+									<pre><a href="{% url 'delete_address' adr.id %}">حذف</a></pre>
+								</div>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+				<p></p>
+	{% endif %}
+	<br><br>
+	<blockquote class="blockquote text-center">
+		<p class="mb-0"></p>
+		<footer class="blockquote-footer"></footer>
+	</blockquote>
+
+{% endblock content %}
